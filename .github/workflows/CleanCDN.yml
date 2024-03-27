@@ -36,4 +36,4 @@ jobs:
         env:
           CLOUDFLARE_CACHE_PURGE_TOKEN: ${{ secrets.CLOUDFLARE_CACHE_PURGE_TOKEN }}
         run: |
-          ./scripts/extension-upload-from-nighty.sh ${{inputs.extension}} ${{inputs.version}}
+          ./scripts/extension-upload-from-nightly.sh ${{inputs.extension}} ${{inputs.version}}
