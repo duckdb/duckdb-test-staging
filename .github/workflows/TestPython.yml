@@ -11,6 +11,9 @@ concurrency:
 
 env:
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.S3_DUCKDB_STAGING_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_DUCKDB_STAGING_KEY }}
+
 jobs:
   test_matrix_python:
     strategy:
@@ -37,9 +40,6 @@ jobs:
           pip install awscli
 
       - name: Download folder
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.STAGING_ACCESS_USER }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGING_ACCESS_KEY }}
         run: |
           aws s3 cp --recursive s3://duckdb-staging/1f98600c2c/v1.0.0/duckdb/duckdb/twine_upload/ twine_upload --region us-east-2
 
