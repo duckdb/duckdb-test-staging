@@ -414,7 +414,6 @@ class SQLLogicDatabase:
     def reset(self):
         self.database: Optional[duckdb.DuckDBPyConnection] = None
         self.config: Dict[str, Any] = {
-            'allow_unsigned_extensions': True,
             'allow_unredacted_secrets': True,
         }
         self.path = ''
@@ -886,7 +885,6 @@ class SQLLogicContext:
             if name in [
                 'access_mode',
                 'enable_external_access',
-                'allow_unsigned_extensions',
                 'allow_unredacted_secrets',
                 'duckdb_api',
             ]:
