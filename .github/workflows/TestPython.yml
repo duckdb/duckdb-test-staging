@@ -37,7 +37,6 @@ jobs:
         with:
           arch: x64
 
-
       - uses: actions/checkout@v3
 
       - name: Install aws
@@ -56,6 +55,7 @@ jobs:
         shell: bash
         run: |
           pip install termcolor
+          pip install pytz
           set PYTHONIOENCODING=utf-8
           python3 tools/pythonpkg/scripts/sqllogictest_python.py
 
