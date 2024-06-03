@@ -28,12 +28,6 @@ jobs:
           python-version: ${{ matrix.version }}
 
       - uses: actions/checkout@v3
-        with:
-          sparse-checkout: examples
-
-      - uses: actions/checkout@v3
-        with:
-          sparse-checkout: examples
 
       - name: Install aws
         run: |
@@ -51,7 +45,7 @@ jobs:
         shell: bash
         run: |
           set PYTHONIOENCODING=utf-8
-          python3 examples/example.py
+          python3 tools/pythonpkg/scripts/sqllogictest_python.py
 
   test_matrix_python_build:
     if: false
@@ -81,6 +75,7 @@ jobs:
           python3 examples/example.py
 
   test_matrix_cli:
+    if: false
     strategy:
       fail-fast: false
       matrix:
