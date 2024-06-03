@@ -54,6 +54,12 @@ jobs:
           set PYTHONIOENCODING=utf-8
           python3 tools/pythonpkg/scripts/sqllogictest_python.py
 
+      - name: Installed extensions
+        shell: bash
+        if: always()
+        run: |
+          ls -la ~/.duckdb/extensions/v1.0.0/**
+
   test_matrix_python_build:
     if: false
     strategy:
@@ -80,12 +86,6 @@ jobs:
         shell: bash
         run: |
           python3 examples/example.py
-
-      - name: Installed extensions
-        shell: bash
-        if: always()
-        run: |
-          ls -la ~/.duckdb/extensions/v1.0.0/**
 
   test_matrix_cli:
     if: false
