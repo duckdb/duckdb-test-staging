@@ -423,8 +423,10 @@ class SQLLogicDatabase:
         if extension in BUILTIN_EXTENSIONS:
             # No need to load
             return
-        path = context.get_extension_path(extension)
+        path = extension
         # Serialize it as a POSIX compliant path
+        query = f"INSTALL '{path}'"
+        self.database.execute(query)
         query = f"LOAD '{path}'"
         self.database.execute(query)
 
@@ -985,6 +987,7 @@ class SQLLogicContext:
             "notwindows",
             "windows",
             "longdouble",
+            "nopython",
             "64bit",
             "noforcestorage",
             "nothreadsan",
@@ -1008,40 +1011,19 @@ class SQLLogicContext:
             if param == 'skip_reload':
                 self.runner.skip_reload = True
                 return RequireResult.PRESENT
-            return RequireResult.MISSING
+            if param == 'longdouble' or param == 'mingw' or param == 'windows' or param == 'nopython':
+                return RequireResult.MISSING
+            return RequireResult.PRESENT
 
         # Already loaded
         if param in self.runner.extensions:
             return RequireResult.PRESENT
 
-        if self.runner.build_directory is None:
+        try:
+            self.runner.database.load_extension(self, param)
+            self.runner.extensions.add(param)
+        except duckdb.Error:
             return RequireResult.MISSING
-
-        connection = self.pool.get_connection()
-        autoload_known_extensions = connection.execute(
-            "select value::BOOLEAN from duckdb_settings() where name == 'autoload_known_extensions'"
-        ).fetchone()[0]
-        if param == "no_extension_autoloading":
-            if autoload_known_extensions:
-                # If autoloading is on, we skip this test
-                return RequireResult.MISSING
-            return RequireResult.PRESENT
-
-        excluded_from_autoloading = True
-        for ext in self.runner.AUTOLOADABLE_EXTENSIONS:
-            if ext == param:
-                excluded_from_autoloading = False
-                break
-
-        if autoload_known_extensions == False:
-            try:
-                self.runner.database.load_extension(self, param)
-                self.runner.extensions.add(param)
-            except duckdb.Error:
-                return RequireResult.MISSING
-        elif excluded_from_autoloading:
-            return RequireResult.MISSING
-
         return RequireResult.PRESENT
 
     def execute_require(self, statement: Require):
