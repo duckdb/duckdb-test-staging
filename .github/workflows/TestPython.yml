@@ -52,6 +52,18 @@ jobs:
           pip install duckdb --no-index --find-links twine_upload
 
       - name: Run minor test
+        if: always()
+        shell: bash
+        run: |
+          pip install termcolor
+          pip install pytz
+          pip install polars
+          pip install pandas
+          pip install pytest
+          python3 -m pytest tools/pythonpkg/tests/fast
+
+      - name: Run minor test
+        if: always()
         shell: bash
         run: |
           pip install termcolor
