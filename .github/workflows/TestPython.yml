@@ -31,7 +31,7 @@ jobs:
         if: ${{ matrix.os == 'windows-latest' }}
 
       - uses: TheMrMilchmann/setup-msvc-dev@v3
-        if: ${{ matrix.os == 'windows-2019 }}
+        if: ${{ matrix.os == 'windows-2019' }}
 
       - uses: actions/checkout@v3
 
