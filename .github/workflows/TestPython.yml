@@ -55,6 +55,7 @@ jobs:
         if: always()
         shell: bash
         run: |
+          python3 -m pip install -r tools/pythonpkg/requirements-dev.txt
           pip install termcolor
           pip install pytz
           pip install polars
