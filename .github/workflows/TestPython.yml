@@ -19,8 +19,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-24.04, ubuntu-22.04, ubuntu-20.04, windows-2019, 'macos-11', 'macos-12', macos-13, macos-14]
+        os: [windows-latest, 'ubuntu-24.04', ubuntu-22.04, ubuntu-20.04, windows-2019, 'macos-11', 'macos-12', macos-13, macos-14]
         version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        exclude:
+        - os: 'ubuntu-24.04'
+          version: '3.8'
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/setup-python@v5
@@ -48,6 +51,12 @@ jobs:
           aws s3 cp --recursive s3://duckdb-staging/1f98600c2c/v1.0.0/duckdb/duckdb/twine_upload/ twine_upload --region us-east-2
 
       - name: Install aws
+        if: ${{ matrix.os == 'macos-11' }}
+        run: |
+          pip install twine_upload/duckdb-1.0.0.tar.gz
+
+      - name: Install aws
+        if: ${{ matrix.os != 'macos-11' }}
         run: |
           pip install duckdb --no-index --find-links twine_upload
 
